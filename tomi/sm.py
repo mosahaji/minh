@@ -8,9 +8,7 @@ payload = {
   'stream_type': "Seek",
   'channel_id': "900",
 }
-
 headers = {
-
   'User-Agent': "okhttp/4.11.0",
   'devicetype': "phone",
   'os': "android",
