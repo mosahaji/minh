@@ -20,6 +20,6 @@ headers = {
 
 resp = requests.post(url, data=payload, proxies=proxy, headers=headers).json()
 mpd = resp['result']
-stream = requests.get(mpd)
+stream = requests.get(mpd, proxies=proxy)
 st = stream.headers.get('set-cookie').split(';')[0]
 print(f'"cookie": "{st}"')
