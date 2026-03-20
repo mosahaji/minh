@@ -22,4 +22,4 @@ resp = requests.post(url, data=payload, proxies=proxy, headers=headers).json()
 mpd = resp['result']
 stream = requests.get(mpd)
 st = stream.headers.get('set-cookie').split(';')[0]
-print(st)
+print(f'"cookie": "{st}"')
