@@ -22,4 +22,4 @@ mpd = resp['mpd']['result']
 mpd = "https://jiotvmblive.cdn.jio.com/" + mpd.split('/', 3)[-1]
 stream = requests.get(mpd, proxies=proxy)
 st = stream.headers.get('set-cookie').split(';')[0]
-print(f'#EXTHTTP: {"cookie": "{st}"}')
+print(f'#EXTHTTP: {{"cookie": "{st}"}}')
