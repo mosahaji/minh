@@ -244,7 +244,7 @@ pretty_xml = minidom.parseString(
     encoding="utf-8"
 )
 
-output_filename = "epg_ott_navigator.xml"
+output_filename = "starzplay.xml"
 
 with open(output_filename, "wb") as f:
     f.write(pretty_xml)
