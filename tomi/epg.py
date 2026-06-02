@@ -17,6 +17,7 @@ def normalize_channel_name(name: str) -> str:
     # specific replacements
     name = name.replace("Asianet Movies HD", "Asianet Movies")
     name = name.replace("Asianet Plus HD", "Asianet Plus")
+    name = name.replace("Mazhavil Manorama", "Mazhavil Manorama HD")
 
     return name
 
