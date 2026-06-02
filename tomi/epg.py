@@ -6,6 +6,22 @@ from xml.dom import minidom
 print("Starting EPG Generator...")
 
 # ------------------------------------------------------------------
+# Channel name normalization
+# ------------------------------------------------------------------
+def normalize_channel_name(name: str) -> str:
+    if not name:
+        return "Unknown Channel"
+
+    name = name.strip()
+
+    # specific replacements
+    name = name.replace("Asianet Movies HD", "Asianet Movies")
+    name = name.replace("Asianet Plus HD", "Asianet Plus")
+
+    return name
+
+
+# ------------------------------------------------------------------
 # Calculate 24-hour block (00:00 today -> 00:00 tomorrow)
 # ------------------------------------------------------------------
 today = datetime.now()
@@ -35,7 +51,7 @@ headers = {
     "Accept": "application/json, text/plain, */*",
     "x-geo-country": "AE",
     "sec-fetch-dest": "empty",
-    'x-forwarded-for': "103.227.85.0"
+    "x-forwarded-for": "103.227.85.0"
 }
 
 try:
@@ -45,7 +61,6 @@ try:
         headers=headers,
         timeout=30
     )
-
     response.raise_for_status()
 
 except requests.RequestException as e:
@@ -80,16 +95,18 @@ print(f"Found {len(channels)} channels")
 # ------------------------------------------------------------------
 for channel in channels:
 
+    raw_name = channel.get("title", "Unknown Channel")
+
     channel_id = (
         channel.get("slug")
         or str(channel.get("id"))
-        or channel.get("title", "unknown")
+        or normalize_channel_name(raw_name)
     )
 
     ch_elem = ET.SubElement(tv, "channel", {"id": channel_id})
 
     display_name = ET.SubElement(ch_elem, "display-name")
-    display_name.text = channel.get("title", "Unknown Channel")
+    display_name.text = normalize_channel_name(raw_name)
 
     # Channel icon
     images = channel.get("images", [])
@@ -114,10 +131,12 @@ programme_count = 0
 
 for channel in channels:
 
+    raw_name = channel.get("title", "unknown")
+
     channel_id = (
         channel.get("slug")
         or str(channel.get("id"))
-        or channel.get("title", "unknown")
+        or normalize_channel_name(raw_name)
     )
 
     events = channel.get("events", [])
@@ -162,46 +181,24 @@ for channel in channels:
         )
 
         # Title
-        title = ET.SubElement(
-            prog_elem,
-            "title",
-            {"lang": "en"}
-        )
+        title = ET.SubElement(prog_elem, "title", {"lang": "en"})
         title.text = event.get("title", "No Title")
 
         # Description
-        description = (
-            event.get("description")
-            or event.get("synopsis")
-            or ""
-        )
+        description = event.get("description") or event.get("synopsis") or ""
 
-        desc = ET.SubElement(
-            prog_elem,
-            "desc",
-            {"lang": "en"}
-        )
+        desc = ET.SubElement(prog_elem, "desc", {"lang": "en"})
         desc.text = description
 
         # Category
-        category = (
-            event.get("genre")
-            or event.get("category")
-        )
+        category = event.get("genre") or event.get("category")
 
         if category:
-            cat_elem = ET.SubElement(
-                prog_elem,
-                "category",
-                {"lang": "en"}
-            )
+            cat_elem = ET.SubElement(prog_elem, "category", {"lang": "en"})
             cat_elem.text = str(category)
 
         # Episode number
-        episode = (
-            event.get("episodeNumber")
-            or event.get("episode")
-        )
+        episode = event.get("episodeNumber") or event.get("episode")
 
         if episode:
             ep_elem = ET.SubElement(
@@ -233,14 +230,9 @@ print(f"Found {programme_count} programmes")
 # ------------------------------------------------------------------
 # Pretty XML Output
 # ------------------------------------------------------------------
-xml_bytes = ET.tostring(
-    tv,
-    encoding="utf-8"
-)
+xml_bytes = ET.tostring(tv, encoding="utf-8")
 
-pretty_xml = minidom.parseString(
-    xml_bytes
-).toprettyxml(
+pretty_xml = minidom.parseString(xml_bytes).toprettyxml(
     indent="  ",
     encoding="utf-8"
 )
