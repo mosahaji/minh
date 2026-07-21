@@ -2,8 +2,8 @@ import requests
 import base64
 
 url = "https://jiotvapi.media.jio.com/playback/apis/v1/geturl"
-Address = 'https://GF4WHAJHR4u42ADRt5gXMpf7:bbNzBt558jtRDBfEy8A67Fx4@in-mum.prod.surfshark.com:443'
-proxy = None #{'https': Address}
+Address = 'https://8WjUngqqHnpcjdkNbeCYcm5T:WaTCSLbVezb4MXXyUEzZm24h@in-mum.prod.surfshark.com:443'
+proxy = {'https': Address}
 payload = {
     "stream_type": "Seek",
     "channel_id": "180",
@@ -18,6 +18,6 @@ headers = {
 resp = requests.post(url, data=payload, proxies=proxy, headers=headers).json()
 mpd = resp['mpd']['result']
 mpd = "https://jiotvmblive.cdn.jio.com/" + mpd.split('/', 3)[-1]
-#stream = requests.get(mpd, proxies=proxy)
-#st = stream.headers.get('set-cookie').split(';')[0]
-print(f'#EXTHTTP: {{"cookie": "{mpd}"}}')
+stream = requests.get(mpd, proxies=proxy)
+st = stream.headers.get('set-cookie').split(';')[0]
+print(f'#EXTHTTP: {{"cookie": "{st}"}}')
