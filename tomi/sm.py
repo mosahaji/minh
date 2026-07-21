@@ -3,7 +3,7 @@ import base64
 
 url = "https://jiotvapi.media.jio.com/playback/apis/v1/geturl"
 Address = 'https://8WjUngqqHnpcjdkNbeCYcm5T:WaTCSLbVezb4MXXyUEzZm24h@in-del.prod.surfshark.com:443'
-proxy = {'https': Address}
+proxy = {'http': Address}
 payload = {
     "stream_type": "Seek",
     "channel_id": "180",
