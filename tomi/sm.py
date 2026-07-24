@@ -2,7 +2,7 @@ import requests
 import base64
 
 url = "https://jiotvapi.media.jio.com/playback/apis/v1/geturl"
-Address = 'https://8WjUngqqHnpcjdkNbeCYcm5T:qzWrJ3uHQVp2yZqKrKHpscV6@in-mum.prod.surfshark.com:443'
+Address = 'https://ixvSri64WjPk9eDmw9RCkQNX:MxMGfG91568hizw2ZJSMChGK@in169.proxy.nordvpn.com:89'
 proxy = {'https': Address}
 payload = {
     "stream_type": "Seek",
